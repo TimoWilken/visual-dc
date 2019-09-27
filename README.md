@@ -16,5 +16,8 @@ which could become slow for very long scripts.
 A GUI error reporting mechanism would be nice to have -- errors are printed to
 `stdout`, but not reported to the user via the UI.
 
+![Screenshot][screenshot]
+
 [wiki]: https://en.wikipedia.org/wiki/Dc_(computer_program)
 [man]: https://linux.die.net/man/1/dc
+[screenshot]: https://github.com/TimoWilken/visual-dc/raw/master/doc/screenshot.png
