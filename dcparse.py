@@ -197,12 +197,10 @@ def rotate(_, stack):
     num_to_rotate = int(stack.pop())
     rotate_down = num_to_rotate >= 0
     num_to_rotate = min(abs(num_to_rotate), len(stack))
-    elements = deque(reversed(stack.pop_many(num_to_rotate)))
+    elements = deque(stack.pop_many(num_to_rotate))
+    elements.reverse()
     # top of stack is on the right
-    if rotate_down:
-        elements.append(elements.popleft())
-    else:
-        elements.appendleft(elements.pop())
+    elements.rotate(-1 if rotate_down else +1)
     stack.push(*elements)
 
 
