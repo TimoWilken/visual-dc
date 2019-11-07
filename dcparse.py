@@ -29,8 +29,7 @@ class EmptyStackError(Exception):
 class Stack:
     '''Represents a dc stack, to which commands can be applied.'''
     def __init__(self, decimal_context=decimal.getcontext()):
-        # TODO: use a deque instead of a list
-        self._stack = []
+        self._stack = deque()
         self._context = decimal_context
 
     def clear(self):
