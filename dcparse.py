@@ -71,6 +71,9 @@ class Stack:
     def __tuple__(self):
         return tuple(self._stack)
 
+    def __reversed__(self):
+        return reversed(self._stack)
+
     def run_commands(self, parsed):
         '''Run a CommandSequence on the current stack.'''
         with decimal.localcontext(self._context) as _:
@@ -186,7 +189,7 @@ def set_precision(_, stack):
 def print_stack(_, stack):
     '''Prints the entire stack without altering it.'''
     if stack:
-        print(*reversed(tuple(stack)), sep='\n')
+        print(*reversed(stack), sep='\n')
 
 
 @register_command('r')
