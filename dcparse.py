@@ -9,13 +9,6 @@ import operator as op
 from collections import deque
 
 
-def flip(function):
-    '''Flips the two positional arguments to FUNCTION, preserving **KWARGS.'''
-    def flipped(x, y, **kwargs):
-        return function(y, x, **kwargs)
-    return flipped
-
-
 class DecimalMultipliableString(str):
     '''A str subclass that can be multiplied by a Decimal.'''
     def __mul__(self, other):
@@ -242,7 +235,7 @@ def square_root(_, stack):
 def common_numerical(cmd_text, stack):
     '''Adds/subtracts/multiplies/divides two numbers.'''
     ops = {'+': op.add, '-': op.sub, '*': op.mul, '/': op.truediv, '^': op.pow}
-    stack.push(flip(ops[cmd_text])(*stack.pop_many(2)))
+    stack.push(ops[cmd_text](*reversed(stack.pop_many(2))))
 
 
 @register_command('%')
