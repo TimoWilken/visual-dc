@@ -1,12 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <menu id="app-menu">
-    <section>
-      <item>
-        <attribute name="action">app.quit</attribute>
-        <attribute name="label" translatable="yes">_Quit</attribute>
-        <attribute name="accel">&lt;Primary&gt;q</attribute>
-      </item>
-    </section>
-  </menu>
+  <!-- interface-requires gtk+ 3.0 -->
+  <object class="GtkTextBuffer" id="code_buffer">
+    <signal name="changed" handler="on_change_code" />
+  </object>
+
+  <object class="GtkApplicationWindow" id="main_window">
+    <property name="title">Visual dc</property>
+    <property name="border-width">5</property>
+    <signal name="destroy" handler="on_destroy_main" />
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="spacing">5</property>
+        <child>
+          <object class="GtkTextView">
+            <property name="editable">True</property>
+            <property name="cursor-visible">True</property>
+            <property name="buffer">code_buffer</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="padding">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="DCStack" id="main_stack">
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="padding">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
 </interface>

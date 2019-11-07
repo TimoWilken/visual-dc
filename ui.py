@@ -3,7 +3,7 @@
 
 '''GTK front-end for dcparse.'''
 
-import decimal
+import os.path
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -12,46 +12,14 @@ from gi.repository import Gtk as gtk, Gio as gio, Pango as pango
 import dcparse
 
 
-class VisualDC(gtk.Application):
-    '''Common application actions.'''
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs, application_id='uk.ac.cam.tw466.vdc',
-                         flags=gio.ApplicationFlags.HANDLES_COMMAND_LINE)
+class ApplicationEventHandler:
+    def __init__(self, stack):
+        self.stack = stack
 
-        self.window = None
-        if self.prefers_app_menu():
-            self.set_app_menu(...)
-        else:
-            # menu bar etc
-            pass
+    def on_destroy_main(self, *_):
+        gtk.main_quit()
 
-    def do_activate(self):
-        if not self.window:
-            self.window = ApplicationWindow(application=self)
-        self.window.present()
-
-    def do_command_line(self, command_line):
-        options = command_line.get_options_dict().end().unpack()
-        self.activate()
-        return 0
-
-
-class ApplicationWindow(gtk.ApplicationWindow):
-    '''Main application window.'''
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs, title='Visual dc', border_width=5)
-
-        box = gtk.Box(orientation=gtk.Orientation.VERTICAL, spacing=5)
-        self.add(box)
-
-        self.stack = DCStack()
-        box.pack_end(self.stack, expand=True, fill=True, padding=0)
-
-        code_entry = gtk.TextView(editable=True, cursor_visible=True)
-        code_entry.get_buffer().connect('changed', self._on_code_changed)
-        box.pack_start(code_entry, expand=True, fill=True, padding=0)
-
-    def _on_code_changed(self, widget):
+    def on_change_code(self, widget):
         cmds = dcparse.CommandSequence(widget.get_text(
             widget.get_start_iter(), widget.get_end_iter(),
             include_hidden_chars=False))
@@ -66,6 +34,10 @@ class ApplicationWindow(gtk.ApplicationWindow):
 
 class DCStack(dcparse.Stack, gtk.ListBox):
     '''A ListBox representing a dc stack.'''
+    # Needed for gtk.Builder to recognise this class.
+    # https://eeperry.wordpress.com/2013/01/05/pygtk-new-style-python-class-using-builder/
+    __gtype_name__ = 'DCStack'
+
     def __init__(self):
         super().__init__()
         gtk.ListBox.__init__(self, selection_mode=gtk.SelectionMode.NONE)
@@ -109,9 +81,9 @@ class StackValue(gtk.ListBoxRow):
 
 def main():
     '''Main entry point.'''
-    win = ApplicationWindow()
-    win.connect('destroy', gtk.main_quit)
-    win.show_all()
+    builder = gtk.Builder.new_from_file(os.path.join(os.path.dirname(__file__), 'ui.xml'))
+    builder.connect_signals(ApplicationEventHandler(builder.get_object('main_stack')))
+    builder.get_object('main_window').show_all()
     gtk.main()
 
 
