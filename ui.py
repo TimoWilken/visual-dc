@@ -69,8 +69,7 @@ class DCStack(dcparse.Stack, gtk.ListBox):
     def __init__(self):
         super().__init__()
         gtk.ListBox.__init__(self, selection_mode=gtk.SelectionMode.NONE)
-        placeholder = gtk.Label(label='Empty stack')
-        self.set_placeholder(placeholder)
+        self.set_placeholder(gtk.Label(label='Empty stack'))
 
     def clear(self):
         for widget in self._stack:
